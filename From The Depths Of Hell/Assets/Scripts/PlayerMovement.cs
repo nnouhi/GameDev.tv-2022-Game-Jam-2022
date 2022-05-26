@@ -32,7 +32,16 @@ public class PlayerMovement : MonoBehaviour
         this.DoubleJumpCounter = DoubleJumpCounter;
     }
 
+    public void SetJumpPower(float JumpPower)
+    {
+        this.JumpPower = JumpPower;
+    }
+
     // Getters
+    public float GetJumpPower()
+    {
+        return JumpPower;
+    }
     
 
     void Start()
@@ -41,7 +50,6 @@ public class PlayerMovement : MonoBehaviour
         Rigidbody2DReference = GetComponent<Rigidbody2D>();
         AnimatorReference = GetComponent<Animator>();  
         BoxColliderReference = GetComponent<BoxCollider2D>();
-        AnimatorReference.SetBool("WasJumping", false);
 
         
     }
@@ -137,8 +145,6 @@ public class PlayerMovement : MonoBehaviour
             }
 
             AnimatorReference.SetTrigger("JumpTrigger");
-            AnimatorReference.SetBool("WasJumping", true);
-
         }
         
     }

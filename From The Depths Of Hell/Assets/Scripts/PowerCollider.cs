@@ -6,7 +6,9 @@ using UnityEngine;
 public class PowerCollider : MonoBehaviour
 {
     [SerializeField] float DoubleJumpTimer = 0.0f;
+    [SerializeField] float JumpPowerTimer = 0.0f;
     public PlayerMovement script;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -21,12 +23,31 @@ public class PowerCollider : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        if(other.gameObject.tag == "DoubleJumpBoost")
+        switch(other.gameObject.tag)
         {
-            script.SetDoubleJump(true);
-            script.SetDoubleJumpCounter(DoubleJumpTimer);
+            case "DoubleJumpBoost":
+            {
+                script.SetDoubleJump(true);
+                script.SetDoubleJumpCounter(DoubleJumpTimer); 
+                break;
+            }
+
+            case "JumpBoost":
+            {
+                script.SetJumpPower(script.GetJumpPower() * 2.0f);
+                Invoke("ResetJumpBoost", JumpPowerTimer);
+                break;
+            }
+
+            default:
+                break;
         }
-        
-        //Destroy(other.gameObject);
+    
+        Destroy(other.gameObject);
+    }
+
+    private void ResetJumpBoost()
+    {
+        script.SetJumpPower(script.GetJumpPower() / 2.0f);
     }
 }
