@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float MovementSpeed = 0.0f;
     [SerializeField] private float JumpPower = 0.0f;
-    [SerializeField] private float WallJumpCooldown = 0.0f;
+    [SerializeField] private float WallJumpCooldownTime = 1.0f;
     [SerializeField] private LayerMask GroundLayer;
     [SerializeField] private LayerMask WallLayer;
     
@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private Animator AnimatorReference;
     private BoxCollider2D BoxColliderReference;
 
+    private float WallJumpCooldown = 0.0f;
     private float HorizontalInput = 0.0f;
     private float DoubleJumpCounter = 0.0f;
     private int JumpCount = 0;
@@ -50,8 +51,7 @@ public class PlayerMovement : MonoBehaviour
         Rigidbody2DReference = GetComponent<Rigidbody2D>();
         AnimatorReference = GetComponent<Animator>();  
         BoxColliderReference = GetComponent<BoxCollider2D>();
-
-        
+        WallJumpCooldown = WallJumpCooldownTime;
     }
 
     void FixedUpdate()
@@ -76,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
 
         if(IsGrounded())
         {
-            WallJumpCooldown  = 2.0f;
+            WallJumpCooldown  = WallJumpCooldownTime;
         }
     }
 
@@ -138,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 Rigidbody2DReference.velocity = new Vector2(Rigidbody2DReference.velocity.x, JumpPower);
             }
-            else if(!IsGrounded() && OnWall())
+            else if(!IsGrounded() && OnWall() && WallJumpCooldown > 0.0f)
             {
                 transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
                 Rigidbody2DReference.AddRelativeForce(new Vector2(-transform.localScale.x * 10.0f, JumpPower) * 50);

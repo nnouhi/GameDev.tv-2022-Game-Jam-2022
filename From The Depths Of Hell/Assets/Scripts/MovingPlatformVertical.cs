@@ -7,7 +7,7 @@ public class MovingPlatformVertical : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] private float speed = 2;
     [SerializeField] private float range = 2;
-    [SerializeField] private int startDirection = 1;
+    [SerializeField, Range(-1, 1)] private int startDirection = 1;
 
     private Vector2 startPos;
     private Vector2 direction;
