@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private float DoubleJumpCounter = 0.0f;
     private int JumpCount = 0;
     private bool CanDoubleJump = false;
+    private bool WallState = false;
 
 
     // Setters
@@ -61,13 +62,18 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if(WallState)
+        {
+            WallJumpCooldown -= Time.deltaTime;
+        }
+
         HandleJump();
         
         if(OnWall() && !IsGrounded() && WallJumpCooldown > 0.0f)
         {
+            WallState = true;
             Rigidbody2DReference.gravityScale = 0.0f;
             Rigidbody2DReference.velocity = Vector2.zero;
-            WallJumpCooldown -= Time.deltaTime;
         }
         else 
         {
@@ -76,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
 
         if(IsGrounded())
         {
+            WallState = false;
             WallJumpCooldown  = WallJumpCooldownTime;
         }
     }
@@ -84,8 +91,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Rigidbody2DReference.gravityScale = 1.0f;
     }
-
-    
 
     private void HandleMovement()
     {
