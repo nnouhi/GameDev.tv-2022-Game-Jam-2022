@@ -41,6 +41,9 @@ public class PlayerMovement : MonoBehaviour
         Rigidbody2DReference = GetComponent<Rigidbody2D>();
         AnimatorReference = GetComponent<Animator>();  
         BoxColliderReference = GetComponent<BoxCollider2D>();
+        AnimatorReference.SetBool("WasJumping", false);
+
+        
     }
 
     void FixedUpdate()
@@ -52,14 +55,20 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleJump();
         
-        if(OnWall() && !IsGrounded())
+        if(OnWall() && !IsGrounded() && WallJumpCooldown > 0.0f)
         {
             Rigidbody2DReference.gravityScale = 0.0f;
             Rigidbody2DReference.velocity = Vector2.zero;
+            WallJumpCooldown -= Time.deltaTime;
         }
         else 
         {
             ResetGravity();
+        }
+
+        if(IsGrounded())
+        {
+            WallJumpCooldown  = 2.0f;
         }
     }
 
@@ -73,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
     private void HandleMovement()
     {
         HorizontalInput = Input.GetAxis("Horizontal");
-
+        
         Rigidbody2DReference.velocity = new Vector2(HorizontalInput * MovementSpeed, Rigidbody2DReference.velocity.y);
          
         // Flip player based on input direction
@@ -111,6 +120,7 @@ public class PlayerMovement : MonoBehaviour
         // Double jump logic
         if(Input.GetKeyDown(KeyCode.Space))
         {
+
             if(CanDoubleJump && JumpCount < 2) 
             {
                 Rigidbody2DReference.velocity = new Vector2(Rigidbody2DReference.velocity.x, JumpPower);
@@ -127,6 +137,8 @@ public class PlayerMovement : MonoBehaviour
             }
 
             AnimatorReference.SetTrigger("JumpTrigger");
+            AnimatorReference.SetBool("WasJumping", true);
+
         }
         
     }
