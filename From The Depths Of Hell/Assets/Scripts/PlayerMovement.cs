@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
+    [SerializeField] private float KnockBackTime = 1.0f;
     [SerializeField] private float KnockBackPower = 0.0f;
     [SerializeField] private float MovementSpeed = 0.0f;
     [SerializeField] private float JumpPower = 0.0f;
@@ -18,11 +18,13 @@ public class PlayerMovement : MonoBehaviour
 
     private float WallJumpCooldown = 0.0f;
     private float HorizontalInput = 0.0f;
+    private float VerticalInput = 0.0f;
     private float DoubleJumpCounter = 0.0f;
     private int JumpCount = 0;
     private bool CanDoubleJump = false;
     private bool WallState = false;
     private bool DisableInput = false;
+    private bool OnLadder = false;
 
 
     // Setters
@@ -39,6 +41,12 @@ public class PlayerMovement : MonoBehaviour
     public void SetJumpPower(float JumpPower)
     {
         this.JumpPower = JumpPower;
+    }
+
+    public void SetOnLadder(bool OnLadder)
+    {
+        this.OnLadder = OnLadder;
+        Rigidbody2DReference.gravityScale = (OnLadder) ? 0.0f : 1.0f;
     }
 
     // Getters
@@ -69,15 +77,18 @@ public class PlayerMovement : MonoBehaviour
             WallJumpCooldown -= Time.deltaTime;
         }
 
-        HandleJump();
-        
+        if (!OnLadder)
+        {
+            HandleJump();
+        }
+
         if(OnWall() && !IsGrounded() && WallJumpCooldown > 0.0f)
         {
             WallState = true;
             Rigidbody2DReference.gravityScale = 0.0f;
             Rigidbody2DReference.velocity = Vector2.zero;
         }
-        else 
+        else if (!OnLadder) 
         {
             ResetGravity();
         }
@@ -97,24 +108,33 @@ public class PlayerMovement : MonoBehaviour
     private void HandleMovement()
     {
         if(DisableInput) return;
-        
-        HorizontalInput = Input.GetAxis("Horizontal");
-             
-        Rigidbody2DReference.velocity = new Vector2(HorizontalInput * MovementSpeed, Rigidbody2DReference.velocity.y);
-        
-        // Flip player based on input direction
-        if(HorizontalInput > 0.0f)
+
+        if (OnLadder)
         {
-            transform.localScale = new Vector2(-1.0f, 1.0f);
+            VerticalInput = Input.GetAxis("Vertical");
+            Rigidbody2DReference.velocity = new Vector2(0, VerticalInput * MovementSpeed / 2.0f);
         }
-        else if(HorizontalInput < 0.0f)
+
+        if ((OnLadder && IsGrounded()) || !OnLadder)
         {
-            transform.localScale = new Vector2(1.0f, 1.0f);
+            HorizontalInput = Input.GetAxis("Horizontal");
+
+            Rigidbody2DReference.velocity = new Vector2(HorizontalInput * MovementSpeed, Rigidbody2DReference.velocity.y);
+
+            // Flip player based on input direction
+            if (HorizontalInput > 0.0f)
+            {
+                transform.localScale = new Vector2(-1.0f, 1.0f);
+            }
+            else if (HorizontalInput < 0.0f)
+            {
+                transform.localScale = new Vector2(1.0f, 1.0f);
+            }
+
+            // Animation variables
+            AnimatorReference.SetBool("IsRunning", HorizontalInput != 0);
+            AnimatorReference.SetBool("IsGrounded", IsGrounded());
         }
-        
-        // Animation variables
-        AnimatorReference.SetBool("IsRunning", HorizontalInput != 0);
-        AnimatorReference.SetBool("IsGrounded", IsGrounded());
     }
 
     private void HandleJump()
@@ -176,7 +196,7 @@ public class PlayerMovement : MonoBehaviour
         // Knock player in direction of projectile and disable input
         Rigidbody2DReference.velocity = new Vector2(LaunchDirection.x * KnockBackPower, LaunchDirection.y * KnockBackPower);
         DisableInput = true;
-        Invoke("ResetInput", 0.5f);
+        Invoke("ResetInput", KnockBackTime);
     }
 
     private void ResetInput()

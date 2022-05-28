@@ -6,6 +6,8 @@ TagManager:
   tags:
   - DoubleJumpBoost
   - JumpBoost
+  - SlowMotion
+  - Ladder
   layers:
   - Default
   - TransparentFX
