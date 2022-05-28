@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6662190303916640290}
   - component: {fileID: 6662190303916640291}
   - component: {fileID: 6662190303916640288}
+  - component: {fileID: 8758255921447360837}
   m_Layer: 0
   m_Name: SlowMotionPowerUp
   m_TagString: SlowMotion
@@ -132,3 +133,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8758255921447360837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6662190303916640300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f866a46e9c893d544a7e30d69d812cf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RespawnTime: 10
