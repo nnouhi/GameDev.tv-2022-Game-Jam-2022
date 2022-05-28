@@ -23,8 +23,12 @@ public class RotatingPlatform : MonoBehaviour
     
     private void OnCollisionStay2D(Collision2D other)
     {    
-        float Distance  = other.gameObject.transform.position.x - BoxCollider2DReference.bounds.center.x;
-        NewRotation -= Distance * RotationSpeed * Time.deltaTime;
-        transform.rotation = Quaternion.Euler(new Vector3(0,0,NewRotation));
+        if(other.gameObject.transform.position.y > transform.position.y)
+        {
+            float Distance  = other.gameObject.transform.position.x - BoxCollider2DReference.bounds.center.x;
+            NewRotation -= Distance * RotationSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.Euler(new Vector3(0,0,NewRotation));
+        }
+        
     }
 }

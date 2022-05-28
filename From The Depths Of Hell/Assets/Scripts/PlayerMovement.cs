@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
+    [SerializeField] private float KnockBackPower = 0.0f;
     [SerializeField] private float MovementSpeed = 0.0f;
     [SerializeField] private float JumpPower = 0.0f;
     [SerializeField] private float WallJumpCooldownTime = 1.0f;
@@ -21,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private int JumpCount = 0;
     private bool CanDoubleJump = false;
     private bool WallState = false;
+    private bool DisableInput = false;
 
 
     // Setters
@@ -94,10 +96,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
-        HorizontalInput = Input.GetAxis("Horizontal");
+        if(DisableInput) return;
         
+        HorizontalInput = Input.GetAxis("Horizontal");
+             
         Rigidbody2DReference.velocity = new Vector2(HorizontalInput * MovementSpeed, Rigidbody2DReference.velocity.y);
-         
+        
         // Flip player based on input direction
         if(HorizontalInput > 0.0f)
         {
@@ -133,7 +137,6 @@ public class PlayerMovement : MonoBehaviour
         // Double jump logic
         if(Input.GetKeyDown(KeyCode.Space))
         {
-
             if(CanDoubleJump && JumpCount < 2) 
             {
                 Rigidbody2DReference.velocity = new Vector2(Rigidbody2DReference.velocity.x, JumpPower);
@@ -168,5 +171,16 @@ public class PlayerMovement : MonoBehaviour
         return RaycastHit.collider != null;
     }
 
-    
+    public void Knock(Vector2 LaunchDirection)
+    {
+        // Knock player in direction of projectile and disable input
+        Rigidbody2DReference.velocity = new Vector2(LaunchDirection.x * KnockBackPower, LaunchDirection.y * KnockBackPower);
+        DisableInput = true;
+        Invoke("ResetInput", 0.5f);
+    }
+
+    private void ResetInput()
+    {
+        DisableInput = false;
+    }
 }

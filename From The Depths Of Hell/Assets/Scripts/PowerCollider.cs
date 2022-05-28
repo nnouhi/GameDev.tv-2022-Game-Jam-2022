@@ -28,7 +28,8 @@ public class PowerCollider : MonoBehaviour
             case "DoubleJumpBoost":
             {
                 script.SetDoubleJump(true);
-                script.SetDoubleJumpCounter(DoubleJumpTimer); 
+                script.SetDoubleJumpCounter(DoubleJumpTimer);
+                Destroy(other.gameObject); 
                 break;
             }
 
@@ -36,6 +37,7 @@ public class PowerCollider : MonoBehaviour
             {
                 script.SetJumpPower(script.GetJumpPower() * 2.0f);
                 Invoke("ResetJumpBoost", JumpPowerTimer);
+                Destroy(other.gameObject); 
                 break;
             }
 
@@ -43,7 +45,6 @@ public class PowerCollider : MonoBehaviour
                 break;
         }
     
-        Destroy(other.gameObject);
     }
 
     private void ResetJumpBoost()
