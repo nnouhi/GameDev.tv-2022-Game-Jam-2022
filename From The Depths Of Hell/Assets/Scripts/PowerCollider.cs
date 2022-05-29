@@ -9,6 +9,11 @@ public class PowerCollider : MonoBehaviour
     [SerializeField] float JumpPowerTimer = 0.0f;
     [SerializeField] float SlowMotionTime = 5.0f;
     [SerializeField, Range(0.2f, 0.8f)] float SlowMotionScale = 0.5f;
+
+    [SerializeField] private GameObject DoubleJumpImage;
+    [SerializeField] private GameObject LongJumpImage;
+    [SerializeField] private GameObject SlowMotionImage;
+
     public PlayerMovement script;
     
     // Start is called before the first frame update
@@ -31,7 +36,8 @@ public class PowerCollider : MonoBehaviour
             {
                 script.SetDoubleJump(true);
                 script.SetDoubleJumpCounter(DoubleJumpTimer);
-                other.GetComponent<PowerUp>()?.Collect(); 
+                other.GetComponent<PowerUp>()?.Collect();
+                DisplayDoubleJump();
                 break;
             }
 
@@ -40,6 +46,7 @@ public class PowerCollider : MonoBehaviour
                 script.SetJumpPower(script.GetJumpPower() * 2.0f);
                 Invoke("ResetJumpBoost", JumpPowerTimer);
                 other.GetComponent<PowerUp>()?.Collect();
+                DisplayLongJump();
                 break;
             }
 
@@ -48,6 +55,7 @@ public class PowerCollider : MonoBehaviour
                 Time.timeScale = SlowMotionScale;
                 Invoke("ResetTimeScale", SlowMotionTime);
                 other.GetComponent<PowerUp>()?.Collect();
+                DisplaySlowMotion();
                 break;
             }
 
@@ -68,6 +76,39 @@ public class PowerCollider : MonoBehaviour
         {
             script.SetOnLadder(false);
         }
+    }
+
+    private void DisplayDoubleJump()
+    {
+        DoubleJumpImage.SetActive(true);
+        Invoke("HideDoubleJump", DoubleJumpTimer);
+    }
+
+    private void HideDoubleJump()
+    {
+        DoubleJumpImage.SetActive(false);
+    }
+
+    private void DisplayLongJump()
+    {
+        LongJumpImage.SetActive(true);
+        Invoke("HideLongJump", JumpPowerTimer);
+    }
+
+    private void HideLongJump()
+    {
+        LongJumpImage.SetActive(false);
+    }
+
+    private void DisplaySlowMotion()
+    {
+        SlowMotionImage.SetActive(true);
+        Invoke("HideSlowMotion", SlowMotionTime);
+    }
+
+    private void HideSlowMotion()
+    {
+        SlowMotionImage.SetActive(false);
     }
 
     private void ResetJumpBoost()
