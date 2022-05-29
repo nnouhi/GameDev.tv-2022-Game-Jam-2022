@@ -11,7 +11,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float WallJumpCooldownTime = 1.0f;
     [SerializeField] private LayerMask GroundLayer;
     [SerializeField] private LayerMask WallLayer;
-    
+    [SerializeField] private GameObject PauseMenu;
+    [SerializeField] private MainMenu Menu;
+    [SerializeField] private AudioClip JumpSound;
+
+    private AudioSource PlayerAudio;
     private Rigidbody2D Rigidbody2DReference;
     private Animator AnimatorReference;
     private BoxCollider2D BoxColliderReference;
@@ -63,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
         AnimatorReference = GetComponent<Animator>();  
         BoxColliderReference = GetComponent<BoxCollider2D>();
         WallJumpCooldown = WallJumpCooldownTime;
+        PlayerAudio = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -72,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        CheckPause();
+
         if(WallState)
         {
             WallJumpCooldown -= Time.deltaTime;
@@ -161,20 +168,32 @@ public class PlayerMovement : MonoBehaviour
             {
                 Rigidbody2DReference.velocity = new Vector2(Rigidbody2DReference.velocity.x, JumpPower);
                 JumpCount++;
+                PlayerAudio.PlayOneShot(JumpSound);
             }
             else if(IsGrounded())
             {
                 Rigidbody2DReference.velocity = new Vector2(Rigidbody2DReference.velocity.x, JumpPower);
+                PlayerAudio.PlayOneShot(JumpSound);
             }
             else if(!IsGrounded() && OnWall() && WallJumpCooldown > 0.0f)
             {
                 transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
                 Rigidbody2DReference.AddRelativeForce(new Vector2(-transform.localScale.x * 10.0f, JumpPower) * 50);
+                PlayerAudio.PlayOneShot(JumpSound);
             }
 
             AnimatorReference.SetTrigger("JumpTrigger");
         }
         
+    }
+
+    private void CheckPause()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && !Menu.InMenu())
+        {
+            Time.timeScale = 0.0f;
+            PauseMenu.SetActive(true);
+        }
     }
 
     private bool IsGrounded()

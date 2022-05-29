@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+    private bool inMenu = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +15,7 @@ public class MainMenu : MonoBehaviour
     public void StartGame()
     {
         Time.timeScale = 1.0f;
+        inMenu = false;
     }
 
     public void QuitGame()
@@ -21,5 +24,8 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-   
+    public bool InMenu()
+    {
+        return inMenu;
+    }
 }
