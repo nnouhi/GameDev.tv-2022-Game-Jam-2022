@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject PauseMenu;
     [SerializeField] private MainMenu Menu;
     [SerializeField] private AudioClip JumpSound;
+    [SerializeField] private AudioClip KnockbackSound;
 
     private AudioSource PlayerAudio;
     private Rigidbody2D Rigidbody2DReference;
@@ -216,10 +217,17 @@ public class PlayerMovement : MonoBehaviour
         Rigidbody2DReference.velocity = new Vector2(LaunchDirection.x * KnockBackPower, LaunchDirection.y * KnockBackPower);
         DisableInput = true;
         Invoke("ResetInput", KnockBackTime);
+        SetKnockBackTrigger();
+        PlayerAudio.PlayOneShot(KnockbackSound);
     }
 
     private void ResetInput()
     {
         DisableInput = false;
+    }
+
+    public void SetKnockBackTrigger()
+    {
+        AnimatorReference.SetTrigger("KnockBackTrigger");
     }
 }

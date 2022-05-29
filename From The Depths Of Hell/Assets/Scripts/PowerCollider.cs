@@ -14,12 +14,15 @@ public class PowerCollider : MonoBehaviour
     [SerializeField] private GameObject LongJumpImage;
     [SerializeField] private GameObject SlowMotionImage;
 
+    [SerializeField] private AudioClip PowerUpSound;
+
     public PlayerMovement script;
+    private AudioSource AudioSrc;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        AudioSrc = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -38,6 +41,7 @@ public class PowerCollider : MonoBehaviour
                 script.SetDoubleJumpCounter(DoubleJumpTimer);
                 other.GetComponent<PowerUp>()?.Collect();
                 DisplayDoubleJump();
+                AudioSrc.PlayOneShot(PowerUpSound);
                 break;
             }
 
@@ -47,6 +51,7 @@ public class PowerCollider : MonoBehaviour
                 Invoke("ResetJumpBoost", JumpPowerTimer);
                 other.GetComponent<PowerUp>()?.Collect();
                 DisplayLongJump();
+                AudioSrc.PlayOneShot(PowerUpSound);
                 break;
             }
 
@@ -56,6 +61,7 @@ public class PowerCollider : MonoBehaviour
                 Invoke("ResetTimeScale", SlowMotionTime);
                 other.GetComponent<PowerUp>()?.Collect();
                 DisplaySlowMotion();
+                AudioSrc.PlayOneShot(PowerUpSound);
                 break;
             }
 
