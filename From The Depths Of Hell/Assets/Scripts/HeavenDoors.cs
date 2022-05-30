@@ -5,6 +5,8 @@ using UnityEngine;
 public class HeavenDoors : MonoBehaviour
 {
     [SerializeField] private new GameObject camera;
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject Menu;
     private bool interacted = false;
 
     // Start is called before the first frame update
@@ -24,7 +26,12 @@ public class HeavenDoors : MonoBehaviour
         if (!interacted)
         {
             camera.GetComponent<CameraController>()?.EndGame();
+            player.GetComponent<PlayerMovement>()?.SetInput();
+            Menu.GetComponent<MainMenu>()?.DisplayEnding();
             interacted = true;
+            
         }
     }
+
+    
 }

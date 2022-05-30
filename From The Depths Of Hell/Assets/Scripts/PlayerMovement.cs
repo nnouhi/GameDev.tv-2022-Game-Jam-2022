@@ -33,6 +33,14 @@ public class PlayerMovement : MonoBehaviour
 
 
     // Setters
+
+    public void SetInput()
+    {
+        DisableInput = true;
+        Rigidbody2DReference.velocity = new Vector2(0.0f,0.0f);
+        AnimatorReference.SetBool("IsRunning", false);
+    }
+
     public void SetDoubleJump(bool CanDoubleJump)
     {
         this.CanDoubleJump = CanDoubleJump;
@@ -163,7 +171,7 @@ public class PlayerMovement : MonoBehaviour
         }
        
         // Double jump logic
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) && !DisableInput)
         {
             if(CanDoubleJump && JumpCount < 2) 
             {
