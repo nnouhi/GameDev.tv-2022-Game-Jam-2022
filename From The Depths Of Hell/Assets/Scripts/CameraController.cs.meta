@@ -3,7 +3,12 @@ guid: a4d9bc2571f2aa24f9fcab13c9991023
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - followingObject: {instanceID: 0}
+  - theme: {fileID: 8300000, guid: da495b6765922c548be19e747c91fad1, type: 3}
+  - intro: {fileID: 8300000, guid: a7293b4fb1b527046ad3a1aa923a5091, type: 3}
+  - ending: {fileID: 8300000, guid: a0171404a7af07842b405ac075356466, type: 3}
+  - menu: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
